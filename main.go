@@ -62,8 +62,19 @@ func returnAll(w http.ResponseWriter, r *http.Request) {
 	if err = cursor.All(ctx, &episodes); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(episodes)
-	json.NewEncoder(w).Encode(users)
+	b, err := json.Marshal(episodes)
+	if err != nil {
+		fmt.Println("error:", err)
+	} else {
+		str := string(b)
+		if str == "null" {
+			fmt.Fprintf(w, "No recordd")
+		} else {
+			fmt.Fprintf(w, str)
+		}
+
+	}
+
 }
 
 func createNewUserDB(w http.ResponseWriter, r *http.Request) {
